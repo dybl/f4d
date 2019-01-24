@@ -1,8 +1,9 @@
 # f4d 人脸重建
 
+
+![](https://img.shields.io/badge/opencv-tensorflow-ff69b4.svg)
+![](https://img.shields.io/badge/android-f4d-0f9d58.svg)
 ![](https://img.shields.io/badge/license-Apache2.0-253bd8.svg)
-![](https://img.shields.io/badge/author-dybl-ff69b4.svg)
-![](https://img.shields.io/badge/upload-pass-0f9d58.svg)
 
 ## features 特性
 
