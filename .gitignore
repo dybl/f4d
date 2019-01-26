@@ -17,3 +17,6 @@
 *.so
 *.dll
 *.dylib
+
+# configuration files with user-specific paths:
+initial_cache.cmake
