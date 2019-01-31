@@ -13,7 +13,7 @@
 
 ![](demo.gif)
 
-### TODO
+### TODO 后续
 
 .
 .
@@ -45,9 +45,8 @@
 
 ## License 许可
 
-
 ```sh
-Copyright [2018] [https:github.com/dybl]
+Copyright 2019 dybl
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

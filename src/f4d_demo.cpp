@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "helpers.hpp"
+#include "help.hpp"
 
 #include "eos/core/Landmark.hpp"
 #include "eos/core/LandmarkMapper.hpp"

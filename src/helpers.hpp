@@ -1,9 +1,8 @@
-/*
- * 4dface: Real-time 3D face tracking and reconstruction from 2D video.
+ /*
  *
- * File: apps/helpers.hpp
+ * File: help.cpp
  *
- * Copyright 2015, 2016 Patrik Huber
+ * Copyright [2018] [https:github.com/dybl]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,7 +131,7 @@ public:
 	 * be able to add frames from a live video and merge them on-the-fly.
 	 *
 	 * The threshold means: Each triangle with a view angle smaller than the given angle will be used to merge.
-	 * The default threshold (90°) means all triangles, as long as they're a little bit visible, are merged.
+	 * The default threshold (90ï¿½) means all triangles, as long as they're a little bit visible, are merged.
 	 *
 	 * @param[in] merge_threshold View-angle merge threshold, in degrees, from 0 to 90.
 	 */
@@ -143,7 +142,7 @@ public:
 		visibility_counter = cv::Mat::zeros(512, 512, CV_32SC1);
 		merged_isomap = cv::Mat::zeros(512, 512, CV_32FC4);
 
-		// map 0° to 255, 90° to 0:
+		// map 0ï¿½ to 255, 90ï¿½ to 0:
 		float alpha_thresh = (-255.f / 90.f) * merge_threshold + 255.f;
 		if (alpha_thresh < 0.f) // could maybe happen due to float inaccuracies / rounding?
 			alpha_thresh = 0.0f;
