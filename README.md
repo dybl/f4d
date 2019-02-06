@@ -5,20 +5,15 @@
 ![](https://img.shields.io/badge/android-f4d-0f9d58.svg)
 ![](https://img.shields.io/badge/license-Apache2.0-253bd8.svg)
 
+> 使用人脸标定算法,人脸美颜,美妆,配合式活体检测,人脸校准的预处理步骤.
 ## features 特性
 
 －[x] 106点，人脸轮廓描述更加细腻
 －[x] 准确度高，逆光、暗光情况下依然可以取得良好的标定效果
 －[x] 多人脸跟踪
 
-![](demo.gif)
 
 ### TODO 后续
-
-.
-.
-.
-
 
 ## exists problem 存在的问题
 
