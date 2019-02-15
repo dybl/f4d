@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">f4d</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">主页</string>
+    <string name="title_notifications">通知</string>
+    <string name="title_focus">focus</string>
+    <string name="tip">fun U and for U</string>
+    <string name="copyright">2019 funu co.,ltd</string>
 </resources>

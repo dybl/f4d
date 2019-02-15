@@ -1,4 +1,4 @@
-package com.junjc9.funu.app.f4d;
+package com.junjc9.funu.app.f4d.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,6 +6,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.junjc9.funu.app.f4d.R;
 
 public class F4dMainActivity extends AppCompatActivity {
 
@@ -20,8 +22,8 @@ public class F4dMainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     mTextMessage.setText(R.string.title_home);
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                case R.id.navigation_focus:
+                    mTextMessage.setText(R.string.title_focus);
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
