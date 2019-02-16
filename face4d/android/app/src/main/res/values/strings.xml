@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">face4d</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">junjc9</string>
+    <string name="nav_header_subtitle">永远年轻，永远热泪盈眶</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="splash_copyright">2019 funu co.,ltd</string>
+</resources>
