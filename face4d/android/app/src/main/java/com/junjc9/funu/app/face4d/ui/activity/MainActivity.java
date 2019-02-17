@@ -1,4 +1,4 @@
-package com.junjc9.funu.app.face4d;
+package com.junjc9.funu.app.face4d.ui.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.content.Context;
 
+import com.junjc9.funu.app.face4d.R;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private CoordinatorLayout right;
@@ -32,10 +34,11 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, getResources().getString(R.string.nav_header_subtitle), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

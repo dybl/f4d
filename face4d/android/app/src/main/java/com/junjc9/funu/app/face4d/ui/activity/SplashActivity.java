@@ -1,4 +1,4 @@
-package com.junjc9.funu.app.face4d;
+package com.junjc9.funu.app.face4d.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
@@ -8,6 +8,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.junjc9.funu.app.face4d.R;
+import com.junjc9.funu.app.face4d.widget.view.RoundImageView;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
