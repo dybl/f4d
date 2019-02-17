@@ -7,14 +7,14 @@
 
     <com.junjc9.funu.app.face4d.RoundImageView
         android:id="@+id/splash_img"
-        android:layout_width="406dp"
-        android:layout_height="340dp"
+        android:layout_width="wrap_content"
+        android:layout_height="317dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.016"
+        app:layout_constraintVertical_bias="0.006"
         tools:src="@drawable/ic_hello" />
 
     <TextView
