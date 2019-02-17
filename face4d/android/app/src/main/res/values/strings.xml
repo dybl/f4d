@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">face4d</string>
+
+    //侧滑菜单
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">junjc9</string>
+    <string name="nav_header_subtitle">永远年轻，永远热泪盈眶</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    //导航栏右侧弹出菜单动作
+    <string name="action_settings">Settings</string>
+    <string name="action_open_in_browser">在浏览器中打开</string>
+    <string name="action_help_and_feedback">帮助与反馈</string>
+
+    //欢迎界面
+    <string name="splash_copyright">2019 funu co.,ltd</string>
+</resources>
