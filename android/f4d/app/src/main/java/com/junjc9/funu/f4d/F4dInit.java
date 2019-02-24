@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Logger;
 import timber.log.Timber;
 
 public class F4dInit {
@@ -17,7 +18,11 @@ public class F4dInit {
 
     /* 初始化OkHttpClient */
     static void initOKHttp(Application app) {
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(message -> Timber.tag("OkHttps").d(message));
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new Logger() {
+            @Override public void log(String message) {
+                Timber.tag("OkHttp3").d(message);
+            }
+        });
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(HTTP_CONNECT_TIMEOUT, TimeUnit.SECONDS)

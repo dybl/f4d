@@ -26,7 +26,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.github.daniel-stoneuk:material-about-library:2.4.2'
-
+    //network framework
+    implementation 'com.squareup.okhttp3:okhttp:3.13.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
