@@ -7,6 +7,8 @@
     <string name="nav_header_title">junjc9</string>
     <string name="nav_header_subtitle">永远年轻，永远热泪盈眶</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="logout">登出</string>
+    <string name="add_account">添加账户</string>
 
     //导航栏右侧弹出菜单动作
     <string name="action_settings">Settings</string>
@@ -14,7 +16,7 @@
     <string name="action_help_and_feedback">帮助与反馈</string>
 
     //欢迎界面
-    <string name="splash_copyright">Copyright 2019 funu co.,ltd</string>
+    <string name="splash_copyright">© 2019 FunU co.,ltd</string>
     <string name="title_activity_settings">Settings</string>
 
     //about
@@ -33,9 +35,15 @@
     <string name="share_to_friends">Share to your friends</string>
     <string name="feedback">Feedback</string>
 
-    <string name="author_name" >junjc9</string>
+    <string name="author_name">junjc9</string>
 
-    <string name="author_location" >Shanghai,China</string>
-    <string name="auth_email_address" >junjc9@gmail.com</string>
+    <string name="author_location">Shanghai,China</string>
+    <string name="auth_email_address">junjc9@gmail.com</string>
     <string name="rate_in_market">在应用市场中评分或评论</string>
+
+    //footer tab
+    <string name="footer_home">home</string>
+    <string name="footer_search">search</string>
+    <string name="footer_album">album</string>
+    <string name="footer_notifications">notifications</string>
 </resources>

@@ -42,4 +42,22 @@ public class SplashActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+    /*
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            if(!enableExit) {
+                enableExit = true;
+                Toast.makeText(this,"再按一次退出",Toast.LENGTH_LONG).show();
+                myHandler.sendEmptyMessageDelayed(0,3000);
+            }else {
+//                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+    */
 }

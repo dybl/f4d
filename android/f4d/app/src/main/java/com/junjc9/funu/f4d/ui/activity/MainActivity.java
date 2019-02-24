@@ -229,6 +229,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_setting:
                 break;
+
         }
         /*
         int id = item.getItemId();

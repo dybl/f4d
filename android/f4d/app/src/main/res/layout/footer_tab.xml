@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="?android:attr/windowBackground"
+    android:orientation="horizontal"
+    android:layout_gravity="bottom">
+
+    <LinearLayout
+        android:id="@+id/main_footer_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/tab_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/footer_tab_dashboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:clickable="false"
+                android:src="@drawable/ic_dashboard"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tab_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/footer_tab_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:clickable="false"
+                android:src="@drawable/ic_search" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tab_album"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/footer_tab_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:clickable="false"
+                android:src="@drawable/ic_album" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tab_notifications"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/footer_tab_notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:clickable="false"
+                android:src="@drawable/ic_notifications" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

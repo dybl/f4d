@@ -34,6 +34,7 @@
                 android:title="Send" />
         </menu>
     </item>
+
     <item android:title="Other">
         <menu>
             <item
@@ -45,6 +46,8 @@
                 android:icon="@drawable/ic_menu_settings"
                 android:title="Setting" />
         </menu>
+
     </item>
+
 
 </menu>
