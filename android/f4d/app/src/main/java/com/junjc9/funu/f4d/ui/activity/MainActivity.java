@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         /*
         final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
         FloatingActionButton fablandmarkbt = (FloatingActionButton) findViewById(R.id.fab_landmark);
