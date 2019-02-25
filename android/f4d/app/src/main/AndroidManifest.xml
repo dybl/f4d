@@ -72,19 +72,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-        </activity>
-
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.AboutActivity"
-            android:label="@string/about"></activity>
+            android:label="@string/about"/>
 
-        <activity android:name=".ui.activity.CameraActivity"></activity>
+        <activity
+            android:name=".ui.activity.SettingActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.activity.CameraPreviewActivity"></activity>
+        <activity android:name=".ui.activity.CameraActivity"/>
+
+        <activity android:name=".ui.activity.CameraPreviewActivity"/>
 
 
     </application>

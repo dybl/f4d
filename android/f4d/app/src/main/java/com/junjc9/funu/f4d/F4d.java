@@ -10,10 +10,9 @@ public class F4d extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-        /*
         F4dInit.initTimber();
         F4dInit.initOKHttp(this);
-        */
+
     }
 
     public static F4d getContext() {

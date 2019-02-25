@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <!--RelativeLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,8 +14,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/peek_height"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
-        <include layout="@layout/layout_bottom_sheet" />
-    </RelativeLayout>
+    </RelativeLayout-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -23,13 +22,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/design_default_color_primary"
+        app:backgroundTint="@color/material_blue_100"
         app:borderWidth="0dp"
         app:elevation="5dp"
         app:pressedTranslationZ="10dp"
         app:rippleColor="#a6a6a6"
         app:srcCompat="@drawable/ic_add_black_40dp"
-        app:layout_anchor="@id/bottom_sheet"
         app:layout_anchorGravity="right|top" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

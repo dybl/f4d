@@ -13,21 +13,22 @@ import android.content.Intent;
 import android.view.View;
 
 import android.net.Uri;
-
 import android.os.Environment;
-
 import android.provider.MediaStore;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
-
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import android.widget.TextView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 // import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 //import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -39,6 +40,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.junjc9.funu.f4d.R;
+import com.junjc9.funu.f4d.utils.PackageUtils;
+import com.junjc9.funu.f4d.utils.ResUtils;
 
 
 
@@ -50,28 +53,46 @@ public class MainActivity extends AppCompatActivity
     private CoordinatorLayout right;
     private NavigationView left;
     private boolean isDrawer=false;
-    */
+
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private File currentImageFile = null;
+    */
+    private Toolbar toolbar;
+    private DrawerLayout drawer;
+    private NavigationView nav_view;
+    //private TextView tv_nav_title;
+    //private ConstraintLayout cly_main_content;
+    private FragmentManager mFgManager;
+    private FloatingActionButton fab;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mFgManager = getSupportFragmentManager();
+        initView();
+        //initData();
+    }
+
+    private void initView() {
+
+        toolbar = findViewById(R.id.toolbar);
+        nav_view = findViewById(R.id.nav_view);
+        //tv_nav_title = nav_view.getHeaderView(0).findViewById(R.id.tv_nav_title);
+        drawer = findViewById(R.id.drawer_layout);
+        //cly_main_content = findViewById(R.id.cly_main_content);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
         setSupportActionBar(toolbar);
 
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view,getResources().getString(R.string.nav_header_subtitle), Snackbar.LENGTH_LONG)
+                Snackbar.make(view, getResources().getString(R.string.nav_header_subtitle), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
-
 
         /*
         final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
@@ -114,10 +135,6 @@ public class MainActivity extends AppCompatActivity
         fabeditbt.setTitle("edit");
         */
 
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         /*
         right = (CoordinatorLayout) findViewById(R.id.right);
         left = (NavigationView) findViewById(R.id.nav_view);
@@ -128,8 +145,9 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        nav_view.setItemIconTintList(null);
+        nav_view.setNavigationItemSelectedListener(this);
+    }
 
         /*
         right.setOnTouchListener(new View.OnTouchListener() {
@@ -163,9 +181,8 @@ public class MainActivity extends AppCompatActivity
         });
         */
 
-    }
 
-
+    /*
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -175,6 +192,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,6 +200,20 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+
+    /*
+    private void initData() {
+        mFgManager.beginTransaction().replace(R.id.cly_main_content,
+        toolbar.setTitle(ResUtils.getString(R.string.menu_see_little_sister));
+        String version = PackageUtils.packageName();
+        if(version != null) {
+            String msg = String.format(ResUtils.getString(R.string.menu_drysister_version), version);
+            tv_nav_title.setText(msg);
+        }
+    }
+    */
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -204,10 +236,10 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.nav_camera:
                 break;
 
@@ -227,13 +259,17 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_about:
-                startActivity(new Intent(this,AboutActivity.class));
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
 
             case R.id.nav_setting:
+                startActivity(new Intent(this, SettingActivity.class));
                 break;
 
         }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
         /*
         int id = item.getItemId();
 
@@ -258,8 +294,13 @@ public class MainActivity extends AppCompatActivity
         }
         */
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

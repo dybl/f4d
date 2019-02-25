@@ -17,11 +17,10 @@
         android:textSize="16sp" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/splash_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        tools:srcCompat="@tools:sample/avatars[7]" />
+        android:layout_centerInParent="true"
+        tools:srcCompat="@drawable/ic_studio" />
 
 </RelativeLayout>
