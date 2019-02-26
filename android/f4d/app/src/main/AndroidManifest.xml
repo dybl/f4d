@@ -78,11 +78,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.login.LoginInitActivity"/>
         <activity android:name=".ui.activity.login.LoginActivity"/>
         <activity android:name=".ui.activity.login.RegisterActivity"
             android:theme="@style/Translucent"/>
-        <activity android:name=".ui.activity.login.LoginSuccessActivity"/>
         <activity
             android:name=".ui.activity.MainActivity"
             android:screenOrientation="portrait" />

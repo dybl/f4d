@@ -8,12 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityOptionsCompat;
 
+//import android.os.Handler;
 import android.transition.Explode;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.junjc9.funu.f4d.R;
+import com.junjc9.funu.f4d.ui.activity.MainActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -23,6 +25,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button btGo;
     private CardView cv;
     private FloatingActionButton lgfab;
+    //private final int LOGIN_DISPLAY_LENGTH = 500;
+    //private Handler lghd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                 getWindow().setExitTransition(explode);
                 getWindow().setEnterTransition(explode);
                 ActivityOptionsCompat oc2 = ActivityOptionsCompat.makeSceneTransitionAnimation(LoginActivity.this);
-                Intent i2 = new Intent(LoginActivity.this,LoginSuccessActivity.class);
+                Intent i2 = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(i2, oc2.toBundle());
             }
         });
@@ -68,12 +72,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        lgfab.setVisibility(View.GONE);
+        //lgfab.setVisibility(View.GONE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        lgfab.setVisibility(View.VISIBLE);
+        //lgfab.setVisibility(View.VISIBLE);
     }
+
 }

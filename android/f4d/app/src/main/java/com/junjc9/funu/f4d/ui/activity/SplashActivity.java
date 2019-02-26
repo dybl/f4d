@@ -11,13 +11,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.junjc9.funu.f4d.R;
-import com.junjc9.funu.f4d.ui.activity.login.LoginInitActivity;
+import com.junjc9.funu.f4d.ui.activity.login.LoginActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private final int SPLASH_DISPLAY_LENGTH = 3000;
+    private final int SPLASH_DISPLAY_LENGTH = 2000;
     private Handler handler;
     private ImageView img;
     private boolean enableExit=false;
@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(SplashActivity.this,
-                        LoginInitActivity.class);
+                        LoginActivity.class);
                 startActivity(intent);
                 SplashActivity.this.finish();
             }
