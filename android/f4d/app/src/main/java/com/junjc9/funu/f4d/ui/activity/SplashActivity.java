@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.junjc9.funu.f4d.R;
+import com.junjc9.funu.f4d.ui.activity.login.LoginInitActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(SplashActivity.this,
-                        MainActivity.class);
+                        LoginInitActivity.class);
                 startActivity(intent);
                 SplashActivity.this.finish();
             }
