@@ -7,17 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-
-import com.junjc9.funu.about.ui.item.FunUAboutCard;
-import com.junjc9.funu.about.FunUAboutListItemView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.widget.NestedScrollView;
 
+import com.junjc9.funu.about.ui.item.FunUAboutCard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
