@@ -6,6 +6,8 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="simple_card_image_width">90dp</dimen>
+    <dimen name="simple_card_image_height">120dp</dimen>
 
     <dimen name="spacing_micro">2dp</dimen>
     <dimen name="spacing_mini">4dp</dimen>

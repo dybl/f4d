@@ -1,6 +1,6 @@
 package com.junjc9.funu.f4d.ui.activity;
 
-
+/*
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -103,3 +103,4 @@ public class AboutActivity extends MaterialAboutActivity {
 
 
 }
+*/
