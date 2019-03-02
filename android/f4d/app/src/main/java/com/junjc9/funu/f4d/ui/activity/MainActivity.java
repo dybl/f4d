@@ -40,6 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.junjc9.funu.f4d.R;
+import com.junjc9.funu.f4d.ui.activity.about.AboutActivity;
 import com.junjc9.funu.f4d.utils.PackageUtils;
 import com.junjc9.funu.f4d.utils.ResUtils;
 

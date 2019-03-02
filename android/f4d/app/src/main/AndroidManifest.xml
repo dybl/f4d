@@ -84,10 +84,10 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:screenOrientation="portrait" />
-        <!--activity
-            android:name=".ui.activity.AboutActivity"
+        <activity
+            android:name=".ui.activity.about.AboutActivity"
             android:label="@string/about" />
-        <activity android:name=".ui.activity.CameraActivity" />
+        <!--activity android:name=".ui.activity.CameraActivity" />
         <activity android:name=".ui.activity.CameraPreviewActivity" /-->
     </application>
 
