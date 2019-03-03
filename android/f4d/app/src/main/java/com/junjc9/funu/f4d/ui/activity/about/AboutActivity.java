@@ -32,7 +32,7 @@ public class AboutActivity extends AppCompatActivity {
 
     WebViewWrapper webViewWrapper;
 
-    private String url = "file:///android_asset/about.html";
+    private String url = "file:///android_asset/funu.html";
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, AboutActivity.class);

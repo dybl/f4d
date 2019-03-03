@@ -1,6 +1,5 @@
 package com.junjc9.funu.f4d.ui.fragment;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
