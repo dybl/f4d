@@ -1,6 +1,6 @@
 package com.example.funu
 
-import android.app.Application;
+import android.app.Application
 
 class App : Application() {
     override fun onCreate() {
