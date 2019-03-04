@@ -29,7 +29,7 @@ abstract class BaseFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         if (rootView == null) {
-            rootView = inflater!!.inflate(R.layout.fragment_base, container, false)
+            rootView = inflater.inflate(R.layout.fragment_base, container, false)
         }
         return rootView
     }

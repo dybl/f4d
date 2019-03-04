@@ -1,7 +1,7 @@
 package com.example.funu.ui.activity
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+//import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import com.example.funu.R
@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     private var lastIndex = -1
     private var lastFragment: Fragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
