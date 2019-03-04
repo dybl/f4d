@@ -2,9 +2,9 @@ package com.junjc9.funu.f4d.ui.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -34,7 +34,7 @@ import com.junjc9.funu.f4d.ui.fragment.VRFragmentPagerItem;
  */
 
 
-public class VRVRFragmentPagerItemAdapter extends FragmentPagerAdapter {
+public class VRFragmentPagerItemAdapter extends FragmentPagerAdapter {
 
     private Context context;
     private List<VRFragmentPagerItem> items;
