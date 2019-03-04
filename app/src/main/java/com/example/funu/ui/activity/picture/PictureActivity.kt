@@ -9,10 +9,8 @@ import com.example.funu.R
 import kotlinx.android.synthetic.main.activity_picture.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 
-/**
- * Created by caik on 2017/6/5.
- */
-class PhotoActivity :AppCompatActivity(){
+
+class PictureActivity :AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
