@@ -34,7 +34,7 @@ class PictureActivity :AppCompatActivity(){
     private fun initToolbar() {
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
-        actionBar!!.title = ""
+        actionBar!!.title = "Gank"
         actionBar.setDisplayHomeAsUpEnabled(true)
     }
 

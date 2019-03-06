@@ -12,4 +12,145 @@
     <string name="girl_title">妹纸福利</string>
     <string name="history_title">往期推荐</string>
     <string name="video_title">休息视频</string>
+    <string name="title_activity_draw">DrawActivity</string>
+
+    <!--login-->
+    <string name="login">LOGIN</string>
+    <string name="Username">Username</string>
+    <string name="Password">Password</string>
+    <string name="forgot_your_password">Forgot your password ?</string>
+    <string name="go">GO</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="next">NEXT</string>
+    <string name="register">REGISTER</string>
+    <!--侧滑菜单-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">junjc9</string>
+    <string name="nav_header_subtitle">永远年轻，永远热泪盈眶</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="logout">登出</string>
+    <string name="add_account">添加账户</string>
+
+    <!--导航栏右侧弹出菜单动作-->
+    <string name="action_settings">Settings</string>
+    <string name="action_open_in_browser">在浏览器中打开</string>
+    <string name="action_help_and_feedback">帮助与反馈</string>
+
+    <!--欢迎界面-->
+    <string name="splash_copyright">© 2019 FunU co.,ltd</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!--about-->
+    <string name="copyright">版权所有2019 funU</string>
+    <string name="author">作者</string>
+    <string name="email">邮件</string>
+    <string name="source_code">源代码</string>
+    <string name="source_code_wishes">星标来支持我</string>
+    <string name="send_email">发送邮件</string>
+    <string name="version">版本</string>
+    <string name="follow_on_github">在GitHub上跟随我</string>
+    <string name="about">关于</string>
+
+    <!--设置相关-->
+    <string name="just_load_in_wifi">仅在WIFI下加载图片</string>
+    <string name="clear_cache">清空缓存</string>
+    <string name="cur_cache">当前缓存 %1$f mb</string>
+    <string name="check_update">检查更新</string>
+    <string name="cur_version">当前版本 %1$s</string>
+    <string name="give_praise">给个好评</string>
+    <string name="commit_question">问题反馈</string>
+    <string name="share_friends">推荐给好基友</string>
+    <string name="contact_me">联系我</string>
+    <string name="no_notifications_tip">No new notifications.</string>
+    <string name="feedback_and_share">Share &#038; Feedback</string>
+    <string name="share_to_friends">Share to your friends</string>
+    <string name="feedback">Feedback</string>
+
+    <string name="author_name">junjc9</string>
+
+    <string name="author_location">Shanghai,China</string>
+    <string name="auth_email_address">junjc9@gmail.com</string>
+    <string name="rate_in_market">在应用市场中评分或评论</string>
+
+    <string name="nav_girl">妹纸福利</string>
+
+    //footer tab
+    <string name="footer_home">home</string>
+    <string name="footer_search">search</string>
+    <string name="footer_album">album</string>
+    <string name="footer_notifications">notifications</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
 </resources>
+
