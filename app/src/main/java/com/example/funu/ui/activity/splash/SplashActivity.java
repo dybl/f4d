@@ -1,4 +1,4 @@
-package com.example.funu.ui.activity.splash;
+package com.junjc9.funu.f4d.ui.activity
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.Toast;xs
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.funu.R;
 import com.example.funu.ui.activity.DrawActivity;
@@ -36,25 +36,13 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, DrawActivity.class);
+                Intent intent = new Intent(SplashActivity.this,
+                    DrawActivity.class);
                 startActivity(intent);
                 SplashActivity.this.finish();
             }
         }, SPLASH_DISPLAY_LENGTH);
-
-        /*
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-            Intent intent = new Intent(LoginPage.this,MainPage.class);
-            startActivity(intent);
-            }
-            };
-            timer.schedule(task, 2000);
-         */
     }
-
 
     /*
     @Override
