@@ -32,6 +32,8 @@
         </activity-->
         <activity android:name=".ui.activity.picture.PictureActivity"/>
         <activity android:name=".ui.activity.about.AboutActivity"/>
+        <activity android:name=".ui.activity.setting.SettingsActivity"/>
+        <activity android:name=".ui.activity.splash.SplashActivity"/>
     </application>
 
 </manifest>

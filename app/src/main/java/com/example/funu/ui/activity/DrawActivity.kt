@@ -12,6 +12,7 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.example.funu.R
 import com.example.funu.ui.activity.about.AboutActivity
+import com.example.funu.ui.activity.setting.SettingsActivity
 import com.example.funu.ui.fragment.WelfareFragment
 import kotlinx.android.synthetic.main.activity_draw.*
 import kotlinx.android.synthetic.main.app_bar_draw.*
@@ -116,6 +117,7 @@ class DrawActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(Intent(this,AboutActivity::class.java))
             }
             R.id.nav_setting -> {
+                startActivity(Intent(this,SettingsActivity::class.java))
 
             }
         }

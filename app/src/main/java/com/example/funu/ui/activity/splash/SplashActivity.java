@@ -1,4 +1,4 @@
-package com.junjc9.funu.f4d.ui.activity
+package com.example.funu.ui.activity.splash;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

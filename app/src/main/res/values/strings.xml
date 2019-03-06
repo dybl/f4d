@@ -81,10 +81,13 @@
     <string name="footer_album">album</string>
     <string name="footer_notifications">notifications</string>
 
+    <!--  -->
     <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
+    <!--  -->
+    <!-- General settings -->
     <string name="pref_header_general">General</string>
+
+    <string name="pref_header_general_summary">general setting for all user</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
@@ -108,6 +111,8 @@
 
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_header_data_sync_summary">back up your setting and sync from local</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
@@ -143,8 +148,10 @@
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
-    <!-- Example settings for Notifications -->
+    <!-- settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_header_notifications_summary">accept notifications from system or other</string>
 
     <string name="pref_title_new_message_notifications">New message notifications</string>
 
@@ -152,5 +159,64 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+    <!-- settings for language choose-->
+    <string name="pref_header_languages">Languages</string>
+    <string name="pref_header_languages_summary">change your prefrence language for using this app easily</string>
+
+    <string name="pref_title_language_list">choose language</string>
+    <string name="pref_try_this_theme">try this theme</string>
+    <string-array name="pref_language_list_titles">
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Italiano</item>
+        <item>Polski</item>
+        <item>Bahasa Indonesia</item>
+        <item>Lietuvos</item>
+    </string-array>
+    <string-array name="pref_language_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+    </string-array>
+
+    <!-- settings for theme choose-->
+    <string name="pref_header_themes">Themes</string>
+    <string name="pref_header_themes_summary">pick your favourite theme for using app</string>
+
+    <string name="pref_title_theme_list">Choose Themes</string>
+    <string-array name="pref_themes_list_titles">
+        <item>Light teal</item>
+        <item>Light indigo</item>
+        <item>Dark</item>
+        <item>AMOLED dark</item>
+    </string-array>
+    <string-array name="pref_theme_values">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+    </string-array>
+
+    <!-- settings for customization-->
+    <string name="pref_header_customization">Customization</string>
+    <string name="pref_header_customization_summary">custom setting for you to allow some extra effect</string>
+    <string name="pref_title_colorless_navbar">Colorless Navbar</string>
+    <string name="pref_title_squarish_avatars">Squarish Avatars</string>
+    <string name="pref_title_list_animation">List Animation</string>
+
+    <!-- settings for help and feedback-->
+    <string name="pref_header_help_feedback">Help &amp; Feedback</string>
+    <string name="pref_header_help_feedback_summary">help us to find bug while using app and we accept your feedback</string>
+
+    <string name="pref_title_all_problems">All Problems</string>
+    <string name="pref_title_quick_help">Quick Help</string>
+    <string name="pref_title_suggestion_feedback">Suggestion Feedback</string>
+    <string name="pref_title_report_bug">Report Bug</string>
+    <string name="pref_title_join_user_experience_plan">Join experience plan</string>
+
 </resources>
 
