@@ -12,7 +12,7 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.junjc9.funu.R
 import com.junjc9.funu.ui.activity.about.AboutActivity
-import com.junjc9.funu.ui.activity.license.LicensesActivity
+import com.junjc9.funu.ui.activity.license.LicenseActivity
 import com.junjc9.funu.ui.activity.setting.SettingsActivity
 import com.junjc9.funu.ui.fragment.WelfareFragment
 import kotlinx.android.synthetic.main.activity_draw.*
@@ -112,7 +112,7 @@ class DrawActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_send -> {
-                startActivity(Intent(this,LicensesActivity::class.java))
+                startActivity(Intent(this,LicenseActivity::class.java))
 
             }
             R.id.nav_about -> {

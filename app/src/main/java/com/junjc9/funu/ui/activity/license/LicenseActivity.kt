@@ -7,7 +7,7 @@ import com.junjc9.funu.ui.fragment.LicensesFragment
 import kotlinx.android.synthetic.main.common_toolbar.*
 
 
-class LicensesActivity : AppCompatActivity() {
+class LicenseActivity : AppCompatActivity() {
 
     private lateinit var mLicensesFragment: LicensesFragment
 

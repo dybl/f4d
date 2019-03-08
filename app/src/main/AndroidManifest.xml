@@ -12,7 +12,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name="com.junjc9.funu.ui.activity.DrawActivity"
+                android:name="com.junjc9.funu.ui.activity.splash.SplashActivity"
                 android:label="@string/title_activity_draw"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -33,8 +33,9 @@
         <activity android:name="com.junjc9.funu.ui.activity.picture.PictureActivity"/>
         <activity android:name="com.junjc9.funu.ui.activity.about.AboutActivity"/>
         <activity android:name="com.junjc9.funu.ui.activity.setting.SettingsActivity"/>
-        <activity android:name="com.junjc9.funu.ui.activity.splash.SplashActivity"/>
-        <activity android:name=".ui.activity.license.LicensesActivity"/>
+        <activity android:name="com.junjc9.funu.ui.activity.DrawActivity"
+                  android:label="@string/title_activity_draw"/>
+        <activity android:name="com.junjc9.funu.ui.activity.license.LicenseActivity"/>
     </application>
 
 </manifest>

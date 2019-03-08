@@ -6,4 +6,6 @@
     <color name="black">#B2000000</color>
 
     <color name="material_white">#FFFFFF</color>
+    <color name="colorSecondaryText">#939393</color>
+    <color name="colorPrimaryText">#000000</color>
 </resources>

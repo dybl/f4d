@@ -17,6 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.junjc9.funu.R;
 
+import static android.webkit.WebSettings.LayoutAlgorithm.SINGLE_COLUMN;
+
 
 /**
  *
@@ -83,9 +85,10 @@ public class WebViewWrapper extends RelativeLayout {
         settings.setDomStorageEnabled(true);
         settings.setGeolocationEnabled(true);
         settings.setAppCacheEnabled(true);
-
+        settings.setLayoutAlgorithm(SINGLE_COLUMN);
         settings.setUseWideViewPort(true); // 将图片调整到适合WebView的大小
         settings.setLoadWithOverviewMode(true); // 自适应屏幕
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
         webView.setHorizontalScrollBarEnabled(false);
         webView.setScrollbarFadingEnabled(true);
