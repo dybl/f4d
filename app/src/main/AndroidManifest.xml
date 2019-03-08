@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.funu">
+          package="com.junjc9.funu">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -12,7 +12,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".ui.activity.DrawActivity"
+                android:name="com.junjc9.funu.ui.activity.DrawActivity"
                 android:label="@string/title_activity_draw"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -30,10 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-->
-        <activity android:name=".ui.activity.picture.PictureActivity"/>
-        <activity android:name=".ui.activity.about.AboutActivity"/>
-        <activity android:name=".ui.activity.setting.SettingsActivity"/>
-        <activity android:name=".ui.activity.splash.SplashActivity"/>
+        <activity android:name="com.junjc9.funu.ui.activity.picture.PictureActivity"/>
+        <activity android:name="com.junjc9.funu.ui.activity.about.AboutActivity"/>
+        <activity android:name="com.junjc9.funu.ui.activity.setting.SettingsActivity"/>
+        <activity android:name="com.junjc9.funu.ui.activity.splash.SplashActivity"/>
+        <activity android:name=".ui.activity.license.LicensesActivity"/>
     </application>
 
 </manifest>
