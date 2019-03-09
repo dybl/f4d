@@ -76,11 +76,12 @@ abstract class BaseFragment : Fragment() {
         loadFinish()
 
     }
-
+    /*
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
         this.activity = activity
     }
+    */
 
     override fun onDetach() {
         super.onDetach()

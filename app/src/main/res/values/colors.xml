@@ -8,4 +8,14 @@
     <color name="material_white">#FFFFFF</color>
     <color name="colorSecondaryText">#939393</color>
     <color name="colorPrimaryText">#000000</color>
+
+    <!-- SwitchCompat -->
+    <color name="thumb_deactivated">#FFECECEC</color>
+    <color name="track_deactivated">#FFB2B2B2</color>
+
+    <color name="pressed_item_foreground">#08000000</color>
+    <color name="activated_item_foreground">#44888888</color>
+    <color name="divider_grey">#40808080</color>
+    <color name="gradient_grey_start">#CC000000</color>
+
 </resources>
