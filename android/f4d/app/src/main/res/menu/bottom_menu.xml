@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/footer_tab_dashboard"
+        android:title="@string/footer_home"
+        android:icon="@drawable/ic_dashboard" />
+    <item android:id="@+id/footer_tab_search"
+        android:title="@string/footer_search"
+        android:icon="@drawable/ic_search" />
+    <item android:id="@+id/footer_tab_album"
+        android:title="@string/footer_album"
+        android:icon="@drawable/ic_album" />
+    <item android:id="@+id/footer_tab_notifications"
+        android:title="@string/footer_notifications"
+        android:icon="@drawable/ic_notifications"/>
+</menu>

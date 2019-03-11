@@ -43,6 +43,7 @@ dependencies {
 
     //timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation project(':library')
     //vr
     implementation 'com.google.vr:sdk-panowidget:1.180.0'
     testImplementation 'junit:junit:4.12'
