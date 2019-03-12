@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12.4)
 project(f4d)
-set(f4d_VERSION 0.1.0)
+set(f4d_VERSION 0.0.1-dev-1811)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -16,9 +16,9 @@ set(f4d_CXX_COMPILE_FEATURES cxx_defaulted_functions cxx_generalized_initializer
 # Build a CPack driven installer package:
 include(InstallRequiredSystemLibraries) # This module will include any runtime libraries that are needed by the project for the current platform
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_PACKAGE_VERSION_MAJOR "${F4D_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${F4D_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${F4D_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${f4d_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${f4d_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${f4d_VERSION_PATCH}")
 include(CPack)
 
 # Find dependencies:
@@ -37,8 +37,8 @@ set_target_properties(${OpenCV_LIBS} PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBIN
 
 # Include eos. Todo: We should really rather use an import target approach rather than running add_subdirectory here.
 set(eos_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/eos")
-set(F4D_BUILD_EXAMPLES OFF)
-add_subdirectory(${f4d_DIR})
+set(EOS_BUILD_EXAMPLES OFF)
+add_subdirectory(${eos_DIR})
 
 ######### The following will find libigl, and build everything that's required for the viewer - e.g. GLFW:
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -70,7 +70,7 @@ find_package(LIBIGL REQUIRED)
 add_executable(f4d f4d.cpp cxxopts.hpp)
 #target_include_directories(f4d PRIVATE ${LIBIGL_INCLUDE_DIRS})
 #add_definitions(${LIBIGL_DEFINITIONS})
-target_compile_features(f4d PRIVATE ${F4D_CXX_COMPILE_FEATURES})
+target_compile_features(f4d PRIVATE ${f4d_CXX_COMPILE_FEATURES})
 target_link_libraries(f4d eos ${OpenCV_LIBS} igl::core igl::opengl_glfw igl::opengl_glfw_imgui)
 target_link_libraries(f4d "$<$<CXX_COMPILER_ID:GNU>:-pthread>$<$<CXX_COMPILER_ID:Clang>:-pthreads>")
 

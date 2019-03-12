@@ -16,328 +16,586 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
+ * eos - A 3D Morphable Model fitting library written in modern C++11/14.
+ *
+ * File: eos-model-viewer.cpp
+ *
+ * Copyright 2017, 2018 Patrik Huber
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#include "cxxopts.hpp"
+
 #include "eos/core/Mesh.hpp"
 #include "eos/morphablemodel/MorphableModel.hpp"
 #include "eos/morphablemodel/io/cvssp.hpp"
 #include "eos/morphablemodel/Blendshape.hpp"
+#include "eos/cpp17/variant.hpp"
 
-#include <igl/viewer/Viewer.h>
-#include "nanogui/slider.h"
-
-#include "boost/program_options.hpp"
-#include "boost/filesystem.hpp"
+#include "igl/opengl/glfw/Viewer.h"
+#include "igl/opengl/glfw/imgui/ImGuiMenu.h"
+#include "igl/opengl/glfw/imgui/ImGuiHelpers.h"
+#include "imgui/imgui.h"
 
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <random>
-//#include <algorithm>
-#include <map>
-
-using namespace eos;
-namespace po = boost::program_options;
-namespace fs = boost::filesystem;
-using std::cout;
-using std::endl;
+#include <algorithm>
 
 template <typename T>
 std::string to_string(const T a_value, const int n = 6)
 {
-	std::ostringstream out;
-	out << std::setprecision(n) << a_value;
-	return out.str();
+    std::ostringstream out;
+    out << std::setprecision(n) << a_value;
+    return out.str();
+};
+
+// From: https://stackoverflow.com/a/1493195/1345959
+template <class ContainerType>
+void tokenize(const std::string& str, ContainerType& tokens, const std::string& delimiters = " ",
+              bool trim_empty = false)
+{
+    std::string::size_type pos, last_pos = 0;
+    const auto length = str.length();
+
+    using value_type = typename ContainerType::value_type;
+    using size_type = typename ContainerType::size_type;
+
+    while (last_pos < length + 1)
+    {
+        pos = str.find_first_of(delimiters, last_pos);
+        if (pos == std::string::npos)
+        {
+            pos = length;
+        }
+
+        if (pos != last_pos || !trim_empty)
+            tokens.push_back(value_type(str.data() + last_pos, (size_type)pos - last_pos));
+
+        last_pos = pos + 1;
+    }
+};
+
+eos::morphablemodel::MorphableModel load_bin_or_scm_model(std::string model_file)
+{
+    using namespace eos;
+    using eos::morphablemodel::MorphableModel;
+
+    MorphableModel morphable_model;
+
+    std::vector<std::string> tokens;
+    tokenize(model_file, tokens, ".");
+    const auto model_file_extension = tokens.back();
+
+    // Todo: Add try-catch to all these?
+    if (model_file_extension == "scm")
+    {
+        morphable_model = morphablemodel::load_scm_model(model_file);
+    } else if (model_file_extension == "bin")
+    {
+        morphable_model = morphablemodel::load_model(model_file);
+    } else
+    {
+        throw std::runtime_error("Error: Please load a model with .bin or .scm extension.");
+    }
+    return morphable_model;
 }
 
 /**
- * Model viewer for 3D Morphable Models.
- * 
- * It's working well but does have a few todo's left, and the code is not very polished.
  *
- * If no model and blendshapes are given via command-line, then a file-open dialog will be presented.
- * If the files are given on the command-line, then no dialog will be presented.
  */
-int main(int argc, char *argv[])
+eos::morphablemodel::MorphableModel load_model(std::string model_file, std::string blendshapes_file)
 {
-	fs::path model_file, blendshapes_file;
-	try {
-		po::options_description desc("Allowed options");
-		desc.add_options()
-			("help,h",
-				"display the help message")
-			("model,m", po::value<fs::path>(&model_file),
-				"an eos 3D Morphable Model stored as cereal BinaryArchive (.bin)")
-			("blendshapes,b", po::value<fs::path>(&blendshapes_file),
-				"an eos file with blendshapes (.bin)")
-			;
-		po::variables_map vm;
-		po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);
-		if (vm.count("help")) {
-			cout << "Usage: eos-model-viewer [options]" << endl;
-			cout << desc;
-			return EXIT_SUCCESS;
-		}
-		po::notify(vm);
-	}
-	catch (const po::error& e) {
-		cout << "Error while parsing command-line arguments: " << e.what() << endl;
-		cout << "Use --help to display a list of options." << endl;
-		return EXIT_FAILURE;
-	}
+    using namespace eos;
+    using eos::morphablemodel::MorphableModel;
 
-	// Should do it from the shape instance actually - never compute the Mesh actually!
-	auto get_V = [](const core::Mesh& mesh)
-	{
-		Eigen::MatrixXd V(mesh.vertices.size(), 3);
-		for (int i = 0; i < mesh.vertices.size(); ++i)
-		{
-			V(i, 0) = mesh.vertices[i].x;
-			V(i, 1) = mesh.vertices[i].y;
-			V(i, 2) = mesh.vertices[i].z;
-		}
-		return V;
-	};
-	auto get_F = [](const core::Mesh& mesh)
-	{
-		Eigen::MatrixXi F(mesh.tvi.size(), 3);
-		for (int i = 0; i < mesh.tvi.size(); ++i)
-		{
-			F(i, 0) = mesh.tvi[i][0];
-			F(i, 1) = mesh.tvi[i][1];
-			F(i, 2) = mesh.tvi[i][2];
-		}
-		return F;
-	};
-	auto get_C = [](const core::Mesh& mesh)
-	{
-		Eigen::MatrixXd C(mesh.colors.size(), 3);
-		for (int i = 0; i < mesh.colors.size(); ++i)
-		{
-			C(i, 0) = mesh.colors[i].r;
-			C(i, 1) = mesh.colors[i].g;
-			C(i, 2) = mesh.colors[i].b;
-		}
-		return C;
-	};
+    MorphableModel morphable_model;
 
-	morphablemodel::MorphableModel morphable_model;
-	morphablemodel::Blendshapes blendshapes;
+    // Todo: Add try-catch to all these?
+    morphable_model = load_bin_or_scm_model(model_file);
+    // If separate blendshapes are given, load them, and construct a model with expressions:
+    if (!blendshapes_file.empty())
+    {
+        const auto blendshapes = morphablemodel::load_blendshapes(blendshapes_file);
+        morphable_model = MorphableModel(
+            morphable_model.get_shape_model(), blendshapes, morphable_model.get_color_model(),
+            morphable_model.get_landmark_definitions(), morphable_model.get_texture_coordinates());
+    }
+    return morphable_model;
+};
 
-	// These are the coefficients of the currently active mesh instance:
-	std::vector<float> shape_coefficients;
-	std::vector<float> color_coefficients;
-	std::vector<float> blendshape_coefficients;
+/**
+ * Model viewer for 3D Morphable Models.
+ */
+int main(int argc, const char* argv[])
+{
+    using namespace eos;
+    using Eigen::VectorXf;
+    using std::begin;
+    using std::cout;
+    using std::end;
+    using std::endl;
+    using std::for_each;
+    using std::string;
+    using std::vector;
 
-	igl::viewer::Viewer viewer;
+    string model_file, blendshapes_file;
+    try
+    {
+        cxxopts::Options options("eos-model-viewer", "OpenGL viewer for eos's 3D morphable models.");
+        // clang-format off
+        options.add_options()
+            ("h,help", "display the help message")
+            ("m,model", "an eos 3D Morphable Model stored as cereal BinaryArchive (.bin)",
+                cxxopts::value(model_file))
+            ("b,blendshapes", "an eos file with blendshapes (.bin)",
+                cxxopts::value(blendshapes_file));
+        // clang-format on
+        const auto result = options.parse(argc, argv);
+        if (result.count("help"))
+        {
+            cout << options.help() << endl;
+            return EXIT_SUCCESS;
+        }
+    } catch (const cxxopts::OptionException& e)
+    {
+        cout << "Error parsing options: " << e.what() << endl;
+        return EXIT_FAILURE;
+    }
 
-	std::default_random_engine rng;
+    // Note: Take the vertices here directly, so we can maybe avoid ever generating a Mesh instance
+    auto get_V = [](const core::Mesh& mesh) {
+        Eigen::MatrixXd V(mesh.vertices.size(), 3);
+        for (int i = 0; i < mesh.vertices.size(); ++i)
+        {
+            V(i, 0) = mesh.vertices[i](0);
+            V(i, 1) = mesh.vertices[i](1);
+            V(i, 2) = mesh.vertices[i](2);
+        }
+        return V;
+    };
+    auto get_F = [](const core::Mesh& mesh) {
+        Eigen::MatrixXi F(mesh.tvi.size(), 3);
+        for (int i = 0; i < mesh.tvi.size(); ++i)
+        {
+            F(i, 0) = mesh.tvi[i][0];
+            F(i, 1) = mesh.tvi[i][1];
+            F(i, 2) = mesh.tvi[i][2];
+        }
+        return F;
+    };
+    auto get_C = [](const core::Mesh& mesh) {
+        Eigen::MatrixXd C(mesh.colors.size(), 3);
+        for (int i = 0; i < mesh.colors.size(); ++i)
+        {
+            C(i, 0) = mesh.colors[i](0);
+            C(i, 1) = mesh.colors[i](1);
+            C(i, 2) = mesh.colors[i](2);
+        }
+        return C;
+    };
 
-	std::map<nanogui::Slider*, int> sliders; // If we want to set the sliders to zero separately, we need separate maps here.
+    // Init the viewer:
+    igl::opengl::glfw::Viewer viewer;
 
-	auto add_shape_coefficients_slider = [&sliders, &shape_coefficients, &blendshape_coefficients](igl::viewer::Viewer& viewer, const morphablemodel::MorphableModel& morphable_model, const morphablemodel::Blendshapes& blendshapes, std::vector<float>& coefficients, int coefficient_id, std::string coefficient_name) {
-		nanogui::Widget *panel = new nanogui::Widget(viewer.ngui->window());
-		panel->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
-		nanogui::Slider* slider = new nanogui::Slider(panel);
-		sliders.emplace(slider, coefficient_id);
-		slider->setFixedWidth(80);
-		slider->setValue(0.0f);
-		slider->setRange({ -3.5f, 3.5f });
-		//slider->setHighlightedRange({ -1.0f, 1.0f });
+    // Attach a menu plugin:
+    igl::opengl::glfw::imgui::ImGuiMenu menu;
+    viewer.plugins.push_back(&menu);
 
-		nanogui::TextBox *textBox = new nanogui::TextBox(panel);
-		textBox->setFixedSize(Eigen::Vector2i(40, 20));
-		textBox->setValue("0");
-		textBox->setFontSize(16);
-		textBox->setAlignment(nanogui::TextBox::Alignment::Right);
-		slider->setCallback([slider, textBox, &morphable_model, &blendshapes, &viewer, &coefficients, &sliders, &shape_coefficients, &blendshape_coefficients](float value) {
-			textBox->setValue(to_string(value, 2)); // while dragging the slider
-			auto id = sliders[slider]; // Todo: if it doesn't exist, we should rather throw - this inserts a new item into the map!
-			coefficients[id] = value;
-			// Just update the shape (vertices):
-			Eigen::VectorXf shape;
-			if (blendshape_coefficients.size() > 0 && blendshapes.size() > 0)
-			{
-				shape = morphable_model.get_shape_model().draw_sample(shape_coefficients) + morphablemodel::to_matrix(blendshapes) * Eigen::Map<const Eigen::VectorXf>(blendshape_coefficients.data(), blendshape_coefficients.size());
-			}
-			else {
-				shape = morphable_model.get_shape_model().draw_sample(shape_coefficients);
-			}
-			auto num_vertices = morphable_model.get_shape_model().get_data_dimension() / 3;
-			Eigen::Map<Eigen::MatrixXf> shape_reshaped(shape.data(), 3, num_vertices); // Take 3 at a piece, then transpose below. Works. (But is this really faster than a loop?)
-			viewer.data.set_vertices(shape_reshaped.transpose().cast<double>());
-		});
+    morphablemodel::MorphableModel morphable_model;
+    // Load the model right away on start up, if it was given via command-line parameters:
+    if (!model_file.empty())
+    {
+        try
+        {
+            // Loads a .bin or .scm model, with or without blendshapes:
+            morphable_model = load_model(model_file, blendshapes_file);
+            const auto& mean = morphable_model.get_mean();
+            viewer.data().set_mesh(get_V(mean), get_F(mean));
+            viewer.core.align_camera_center(viewer.data().V, viewer.data().F);
+            if (!mean.colors.empty())
+            {
+                viewer.data().set_colors(get_C(mean));
+            }
 
-		return panel;
-	};
+        } catch (const std::runtime_error& e)
+        {
+            cout << "Error loading the given model: " << e.what() << endl;
+            return EXIT_FAILURE;
+        }
+    }
 
-	auto add_blendshapes_coefficients_slider = [&sliders, &shape_coefficients, &blendshape_coefficients](igl::viewer::Viewer& viewer, const morphablemodel::MorphableModel& morphable_model, const morphablemodel::Blendshapes& blendshapes, std::vector<float>& coefficients, int coefficient_id, std::string coefficient_name) {
-		nanogui::Widget *panel = new nanogui::Widget(viewer.ngui->window());
-		panel->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
-		nanogui::Slider* slider = new nanogui::Slider(panel);
-		sliders.emplace(slider, coefficient_id);
-		slider->setFixedWidth(80);
-		slider->setValue(0.0f);
-		slider->setRange({ -0.5f, 2.0f });
-		//slider->setHighlightedRange({ 0.0f, 1.0f });
+    // These are the coefficients of the currently active mesh instance:
+    vector<float> shape_coefficients;
+    vector<float> color_coefficients;
+    vector<float> expression_coefficients;
+    bool display_identity_model_only = true;
 
-		nanogui::TextBox *textBox = new nanogui::TextBox(panel);
-		textBox->setFixedSize(Eigen::Vector2i(40, 20));
-		textBox->setValue("0");
-		textBox->setFontSize(16);
-		textBox->setAlignment(nanogui::TextBox::Alignment::Right);
-		slider->setCallback([slider, textBox, &morphable_model, &blendshapes, &viewer, &coefficients, &sliders, &shape_coefficients, &blendshape_coefficients](float value) {
-			textBox->setValue(to_string(value, 2)); // while dragging the slider
-			auto id = sliders[slider]; // if it doesn't exist, we should rather throw - this inserts a new item into the map!
-			coefficients[id] = value;
-			// Just update the shape (vertices):
-			Eigen::VectorXf shape;
-			if (blendshape_coefficients.size() > 0 && blendshapes.size() > 0)
-			{
-				shape = morphable_model.get_shape_model().draw_sample(shape_coefficients) + morphablemodel::to_matrix(blendshapes) * Eigen::Map<const Eigen::VectorXf>(blendshape_coefficients.data(), blendshape_coefficients.size());
-			}
-			else { // No blendshapes - doesn't really make sense, we require loading them. But it's fine.
-				shape = morphable_model.get_shape_model().draw_sample(shape_coefficients);
-			}
-			auto num_vertices = morphable_model.get_shape_model().get_data_dimension() / 3;
-			Eigen::Map<Eigen::MatrixXf> shape_reshaped(shape.data(), 3, num_vertices); // Take 3 at a piece, then transpose below. Works. (But is this really faster than a loop?)
-			viewer.data.set_vertices(shape_reshaped.transpose().cast<double>());
-		});
+    std::default_random_engine rng;
+    std::array<float, 3> random_sample_sdev = {1.0f, 1.0f, 1.0f}; // shp, exp, col
 
-		return panel;
-	};
+    // Draw our viewers windows:
+    menu.callback_draw_custom_window = [&]() {
+        // Load model & draw sample options:
+        ImGui::SetNextWindowPos(ImVec2(0.f * menu.menu_scaling(), 585), ImGuiSetCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(240, 280), ImGuiSetCond_FirstUseEver);
+        ImGui::Begin("Morphable Model", nullptr, ImGuiWindowFlags_NoSavedSettings);
+        if (ImGui::Button("Load Morphable Model", ImVec2(-1, 0)))
+        {
+            const string mm_fn = igl::file_dialog_open();
+            cout << "Loading Morphable Model " << mm_fn << "..." << endl;
+            try
+            {
+                morphable_model = load_bin_or_scm_model(mm_fn);
+                const auto& mean = morphable_model.get_mean();
+                viewer.data().clear();
+                viewer.data().set_mesh(get_V(mean), get_F(mean));
+                viewer.core.align_camera_center(viewer.data().V, viewer.data().F);
+                if (!mean.colors.empty())
+                {
+                    viewer.data().set_colors(get_C(mean));
+                }
+            } catch (const std::runtime_error&
+                         e) // Todo: I think we have to catch more errors here, like cereal exceptions
+            {
+                cout << "Error loading the given model: " << e.what() << endl;
+            }
+            if (morphable_model.has_separate_expression_model())
+            {
+                // Just a sensible default - if the loaded model has expressions, use them by default:
+                display_identity_model_only = false;
+            }
+        }
+        if (ImGui::Button("Load Blendshapes", ImVec2(-1, 0)))
+        {
+            const string bs_fn = igl::file_dialog_open();
+            cout << "Loading Blendshapes " << bs_fn << "..." << endl;
+            morphablemodel::Blendshapes blendshapes;
+            try
+            {
+                blendshapes = morphablemodel::load_blendshapes(bs_fn);
+                cout << "Blendshapes loaded. Constructing a new model consisting of the loaded identity and "
+                        "colour PCA models, and the loaded blendshapes..."
+                     << endl;
+                morphable_model = morphablemodel::MorphableModel(
+                    morphable_model.get_shape_model(), blendshapes, morphable_model.get_color_model(),
+                    morphable_model.get_landmark_definitions(), morphable_model.get_texture_coordinates());
+                const auto& mean = morphable_model.get_mean();
+                viewer.data().clear();
+                viewer.data().set_mesh(get_V(mean), get_F(mean));
+                viewer.core.align_camera_center(viewer.data().V, viewer.data().F);
+                if (!mean.colors.empty())
+                {
+                    viewer.data().set_colors(get_C(mean));
+                }
 
-	auto add_color_coefficients_slider = [&sliders, &shape_coefficients, &color_coefficients, &blendshape_coefficients](igl::viewer::Viewer& viewer, const morphablemodel::MorphableModel& morphable_model, const morphablemodel::Blendshapes& blendshapes, std::vector<float>& coefficients, int coefficient_id, std::string coefficient_name) {
-		nanogui::Widget *panel = new nanogui::Widget(viewer.ngui->window());
-		panel->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
-		nanogui::Slider* slider = new nanogui::Slider(panel);
-		sliders.emplace(slider, coefficient_id);
-		slider->setFixedWidth(80);
-		slider->setValue(0.0f);
-		slider->setRange({ -3.5f, 3.5f });
-		//slider->setHighlightedRange({ -1.0f, 1.0f });
+            } catch (const std::runtime_error&
+                         e) // Todo: I think we have to catch more errors here, like cereal exceptions
+            {
+                cout << "Error loading the given blendshapes: " << e.what() << endl;
+            }
+            display_identity_model_only = false;
+        }
+        ImGui::Separator();
+        if (ImGui::Button("Mean (id)", ImVec2(-1, 0)))
+        {
+            Eigen::VectorXf mean = morphable_model.get_shape_model().get_mean();
+            // Take 3 at a piece, then transpose:
+            const auto num_vertices = mean.rows() / 3;
+            Eigen::Map<Eigen::MatrixXf> mean_reshaped(mean.data(), 3, num_vertices);
+            viewer.data().set_vertices(mean_reshaped.transpose().cast<double>());
 
-		nanogui::TextBox *textBox = new nanogui::TextBox(panel);
-		textBox->setFixedSize(Eigen::Vector2i(40, 20));
-		textBox->setValue("0");
-		textBox->setFontSize(16);
-		textBox->setAlignment(nanogui::TextBox::Alignment::Right);
-		slider->setCallback([slider, textBox, &morphable_model, &blendshapes, &viewer, &coefficients, &sliders, &shape_coefficients, &color_coefficients, &blendshape_coefficients](float value) {
-			textBox->setValue(to_string(value, 2)); // while dragging the slider
-			auto id = sliders[slider]; // if it doesn't exist, we should rather throw - this inserts a new item into the map!
-			coefficients[id] = value;
-			// Set the new colour values:
-			Eigen::VectorXf color = morphable_model.get_color_model().draw_sample(color_coefficients);
-			auto num_vertices = morphable_model.get_color_model().get_data_dimension() / 3;
-			Eigen::Map<Eigen::MatrixXf> color_reshaped(color.data(), 3, num_vertices); // Take 3 at a piece, then transpose below. Works. (But is this really faster than a loop?)
-			viewer.data.set_colors(color_reshaped.transpose().cast<double>());
-		});
+            if (morphable_model.get_color_model().get_mean().size() > 0)
+            {
+                Eigen::VectorXf color_mean = morphable_model.get_color_model().get_mean();
+                Eigen::Map<Eigen::MatrixXf> color_mean_reshaped(
+                    color_mean.data(), 3,
+                    color_mean.rows() / 3); // Todo: This will fail for gray-level models
+                viewer.data().set_colors(color_mean_reshaped.transpose().cast<double>());
+            }
 
-		return panel;
-	};
+            for_each(begin(shape_coefficients), end(shape_coefficients), [](auto& coeff) { coeff = 0.0f; });
+            for_each(begin(color_coefficients), end(color_coefficients), [](auto& coeff) { coeff = 0.0f; });
+            for_each(begin(expression_coefficients), end(expression_coefficients),
+                     [](auto& coeff) { coeff = 0.0f; });
+            display_identity_model_only = true;
+        }
+        if (ImGui::Button("Mean (id+exp)", ImVec2(-1, 0)))
+        {
+            const auto mean = morphable_model.get_mean();
+            viewer.data().set_vertices(get_V(mean));
+            if (!mean.colors.empty())
+            {
+                viewer.data().set_colors(get_C(mean));
+            }
+            for_each(begin(shape_coefficients), end(shape_coefficients), [](auto& coeff) { coeff = 0.0f; });
+            for_each(begin(color_coefficients), end(color_coefficients), [](auto& coeff) { coeff = 0.0f; });
+            for_each(begin(expression_coefficients), end(expression_coefficients),
+                     [](auto& coeff) { coeff = 0.0f; });
+            display_identity_model_only = false;
+        }
+        ImGui::Separator();
+        if (ImGui::Button("Random face sample", ImVec2(-1, 0)))
+        {
+            // Shape sample:
+            std::normal_distribution<float> shape_coeffs_dist(0.0f,
+                                                              random_sample_sdev[0]); // c'tor takes stddev
+            shape_coefficients =
+                vector<float>(morphable_model.get_shape_model().get_num_principal_components());
+            for_each(begin(shape_coefficients), end(shape_coefficients),
+                     [&rng, &shape_coeffs_dist](auto& coeff) { coeff = shape_coeffs_dist(rng); });
+            // Expression sample:
+            if (morphable_model.has_separate_expression_model())
+            {
 
-	// Extend viewer menu
-	viewer.callback_init = [&](igl::viewer::Viewer& viewer)
-	{
-		// Todo: We could do the following: If a filename is given via cmdline, then don't open the dialogue!
-		if (model_file.empty())
-			model_file = nanogui::file_dialog({ { "bin", "eos Morphable Model file" }, { "scm", "scm Morphable Model file" } }, false);
-		if (model_file.extension() == ".scm") {
-			morphable_model = morphablemodel::load_scm_model(model_file.string()); // try?
-		} else {
-			morphable_model = morphablemodel::load_model(model_file.string()); // try?
-		}
-		if (blendshapes_file.empty())
-			blendshapes_file = nanogui::file_dialog({ { "bin", "融合形态文件" } }, false);
-		blendshapes = morphablemodel::load_blendshapes(blendshapes_file.string()); // try?
-		// Error on load failure: How to make it pop up?
-		//auto dlg = new nanogui::MessageDialog(viewer.ngui->window(), nanogui::MessageDialog::Type::Warning, "Title", "This is a warning message");
+                if (eos::cpp17::holds_alternative<morphablemodel::Blendshapes>(
+                        morphable_model.get_expression_model().value()))
+                {
+                    std::uniform_real_distribution<float> expression_coeffs_dist(
+                        0.0f,
+                        random_sample_sdev[1]); // using the interval [0, sdev] (so it's not really an sdev
+                                                // here!)
+                    const auto expression_model_num_coeffs =
+                        eos::cpp17::get<morphablemodel::Blendshapes>(
+                            morphable_model.get_expression_model().value())
+                            .size();
+                    expression_coefficients = vector<float>(expression_model_num_coeffs);
+                    for_each(begin(expression_coefficients), end(expression_coefficients),
+                             [&rng, &expression_coeffs_dist](auto& coeff) {
+                                 coeff = expression_coeffs_dist(rng);
+                             });
 
-		// Initialise all coefficients (all zeros):
-		shape_coefficients = std::vector<float>(morphable_model.get_shape_model().get_num_principal_components());
-		color_coefficients = std::vector<float>(morphable_model.get_color_model().get_num_principal_components()); // Todo: It can have no colour model!
-		blendshape_coefficients = std::vector<float>(blendshapes.size()); // Todo: Should make it work without blendshapes!
+                } else if (eos::cpp17::holds_alternative<morphablemodel::PcaModel>(
+                               morphable_model.get_expression_model().value()))
+                {
+                    std::normal_distribution<float> expression_coeffs_dist(0.0f, random_sample_sdev[1]);
+                    const auto expression_model_num_coeffs =
+                        eos::cpp17::get<morphablemodel::PcaModel>(
+                            morphable_model.get_expression_model().value())
+                            .get_num_principal_components();
+                    expression_coefficients = vector<float>(expression_model_num_coeffs);
+                    for_each(begin(expression_coefficients), end(expression_coefficients),
+                             [&rng, &expression_coeffs_dist](auto& coeff) {
+                                 coeff = expression_coeffs_dist(rng);
+                             });
+                }
+            }
+            // Colour sample:
+            std::normal_distribution<float> color_coeffs_dist(0.0f, random_sample_sdev[2]);
+            color_coefficients =
+                vector<float>(morphable_model.get_color_model().get_num_principal_components());
+            for_each(begin(color_coefficients), end(color_coefficients),
+                     [&rng, &color_coeffs_dist](auto& coeff) { coeff = color_coeffs_dist(rng); });
 
-		// Start off displaying the mean:
-		const auto mesh = morphable_model.get_mean();
-		viewer.data.set_mesh(get_V(mesh), get_F(mesh));
-		viewer.data.set_colors(get_C(mesh));
-		viewer.core.align_camera_center(viewer.data.V, viewer.data.F);
+            // Now generate the sample:
+            core::Mesh sample;
+            // Note: Can it happen that we pass in colour-coeffs, but it's a model without colour?
+            if (morphable_model.has_separate_expression_model())
+            {
+                sample = morphable_model.draw_sample(shape_coefficients, expression_coefficients,
+                                                     color_coefficients);
+            } else
+            {
+                sample = morphable_model.draw_sample(shape_coefficients, color_coefficients);
+            }
+            viewer.data().set_vertices(get_V(sample));
+            if (!sample.colors.empty())
+            {
+                viewer.data().set_colors(get_C(sample));
+            }
+        }
+        /* // Not yet implemented:
+        if (ImGui::Button("Random identity sample", ImVec2(-1, 0)))
+        {
+        }
+        if (ImGui::Button("Random expression sample", ImVec2(-1, 0)))
+        {
+        }
+        if (ImGui::Button("Random color sample", ImVec2(-1, 0)))
+        {
+        }
+        */
+        ImGui::InputFloat3("sdev [shp, exp, col]", &random_sample_sdev[0], 2);
+        ImGui::Checkbox("Identity model only", &display_identity_model_only);
+        ImGui::End(); // end "Morphable Model" window
 
-		// General:
-		viewer.ngui->addWindow(Eigen::Vector2i(10, 580), "形变模型");
-		// load/save model & blendshapes
-		// save obj
-		// Draw random sample
-		// Load fitting result... (uesful for maybe seeing where something has gone wrong!)
-		// see: https://github.com/wjakob/nanogui/blob/master/src/example1.cpp#L283
-		//viewer.ngui->addButton("Open Morphable Model", [&morphable_model]() {
-		//	std::string file = nanogui::file_dialog({ {"bin", "eos Morphable Model file"} }, false);
-		//	morphable_model = morphablemodel::load_model(file);
-		//});
-		viewer.ngui->addButton("随机面部示例", [&]() {
-			const auto sample = morphable_model.draw_sample(rng, 1.0f, 1.0f); // This draws both shape and color model - we can improve the speed by not doing that.
-			viewer.data.set_vertices(get_V(sample));
-			viewer.data.set_colors(get_C(sample));
-			// Set the coefficients and sliders to the drawn alpha value: (ok we don't have them - need to use our own random function)
-			// Todo.
-		});
+        // PCA shape coefficients:
+        ImGui::SetNextWindowPos(ImVec2(180.f * menu.menu_scaling(), 0), ImGuiSetCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(200, 160), ImGuiSetCond_FirstUseEver);
+        ImGui::Begin("Shape PCA", nullptr, ImGuiWindowFlags_NoSavedSettings);
 
-		viewer.ngui->addButton("Mean", [&]() {
-			const auto mean = morphable_model.get_mean(); // This draws both shape and color model - we can improve the speed by not doing that.
-			viewer.data.set_vertices(get_V(mean));
-			viewer.data.set_colors(get_C(mean));
-			// Set the coefficients and sliders to the mean:
-			for (auto&& e : shape_coefficients)
-				e = 0.0f;
-			for (auto&& e : blendshape_coefficients)
-				e = 0.0f;
-			for (auto&& e : color_coefficients)
-				e = 0.0f;
-			for (auto&& s : sliders)
-				s.first->setValue(0.0f);
-		});
+        ImGui::Text("Coefficients");
+        if (morphable_model.get_shape_model().get_num_principal_components() > 0) // a model was loaded
+        {
+            int num_shape_coeffs_to_display =
+                std::min(morphable_model.get_shape_model().get_num_principal_components(), 30);
 
-		// The Shape PCA window:
-		viewer.ngui->addWindow(Eigen::Vector2i(230, 10), "Shape PCA");
-		viewer.ngui->addGroup("Coefficients");
-		auto num_shape_coeffs_to_display = std::min(morphable_model.get_shape_model().get_num_principal_components(), 30);
-		for (int i=0; i < num_shape_coeffs_to_display; ++i)
-		{
-			viewer.ngui->addWidget(std::to_string(i), add_shape_coefficients_slider(viewer, morphable_model, blendshapes, shape_coefficients, i, std::to_string(i)));
-		}
-		if (num_shape_coeffs_to_display < morphable_model.get_shape_model().get_num_principal_components())
-		{
-			nanogui::Label *label = new nanogui::Label(viewer.ngui->window(), "Displaying 30/" + std::to_string(morphable_model.get_shape_model().get_num_principal_components()) + " coefficients.");
-			viewer.ngui->addWidget("", label);
-		}
+            if (shape_coefficients.empty() || shape_coefficients.size() != num_shape_coeffs_to_display)
+            {
+                // no coeffs yet, or number of coeffs has changed for some reason:
+                shape_coefficients.resize(num_shape_coeffs_to_display);
+            }
+            // shape_coefficients are always initialised now.
 
-		// The Expression Blendshapes window:
-		viewer.ngui->addWindow(Eigen::Vector2i(655, 10), "Expression blendshapes");
-		viewer.ngui->addGroup("Coefficients");
-		for (int i = 0; i < blendshapes.size(); ++i)
-		{
-			viewer.ngui->addWidget(std::to_string(i), add_blendshapes_coefficients_slider(viewer, morphable_model, blendshapes, blendshape_coefficients, i, std::to_string(i)));
-		}
+            ImGui::BeginGroup();
+            for (int i = 0; i < num_shape_coeffs_to_display; ++i)
+            {
+                const string label = std::to_string(i);
+                ImGui::SliderFloat(label.c_str(), &shape_coefficients[i], -3.0, 3.0);
+            }
+            ImGui::EndGroup();
+            string coeffs_displayed =
+                "Displaying " + std::to_string(num_shape_coeffs_to_display) + "/" +
+                std::to_string(morphable_model.get_shape_model().get_num_principal_components()) +
+                " coefficients.";
+            ImGui::Text(coeffs_displayed.c_str());
 
-		// The Colour PCA window:
-		viewer.ngui->addWindow(Eigen::Vector2i(440, 10), "Colour PCA");
-		viewer.ngui->addGroup("Coefficients");
-		auto num_color_coeffs_to_display = std::min(morphable_model.get_color_model().get_num_principal_components(), 30);
-		for (int i = 0; i < num_shape_coeffs_to_display; ++i)
-		{
-			viewer.ngui->addWidget(std::to_string(i), add_color_coefficients_slider(viewer, morphable_model, blendshapes, color_coefficients, i, std::to_string(i)));
-		}
-		if (num_color_coeffs_to_display < morphable_model.get_shape_model().get_num_principal_components())
-		{
-			nanogui::Label *label = new nanogui::Label(viewer.ngui->window(), "Displaying 30/" + std::to_string(morphable_model.get_color_model().get_num_principal_components()) + " coefficients.");
-			viewer.ngui->addWidget("", label);
-		}
+            // We've got a shape model. So update the mesh that's been drawn with the value of the
+            // coefficients. Note that we are currently doing this every draw call, not only when the
+            // slider changes. See eos-model-viewer/issues/5.
+            VectorXf shape_instance = morphable_model.get_shape_model().draw_sample(shape_coefficients);
+            const auto num_vertices = morphable_model.get_shape_model().get_data_dimension() / 3;
+            // If expression coeffs are set, add the expression part:
+            if (!expression_coefficients.empty() && morphable_model.has_separate_expression_model() &&
+                !display_identity_model_only)
+            {
+                if (eos::cpp17::holds_alternative<morphablemodel::PcaModel>(
+                        morphable_model.get_expression_model().value()))
+                {
+                    const auto& expression_model = eos::cpp17::get<morphablemodel::PcaModel>(
+                        morphable_model.get_expression_model().value());
+                    const VectorXf expression_instance =
+                        expression_model.draw_sample(expression_coefficients);
+                    shape_instance += expression_instance;
+                } else if (eos::cpp17::holds_alternative<morphablemodel::Blendshapes>(
+                               morphable_model.get_expression_model().value()))
+                {
+                    const auto& blendshapes = eos::cpp17::get<morphablemodel::Blendshapes>(
+                        morphable_model.get_expression_model().value());
+                    for (int i = 0; i < blendshapes.size(); ++i)
+                    {
+                        shape_instance += blendshapes[i].deformation * expression_coefficients[i];
+                    }
+                }
+            }
+            Eigen::Map<Eigen::MatrixXf> shape_instance_reshaped(
+                shape_instance.data(), 3, num_vertices); // Take 3 at a piece, then transpose below
+            viewer.data().set_vertices(shape_instance_reshaped.transpose().cast<double>());
+        }
 
-		// call to generate menu
-		viewer.screen->performLayout();
-		return false;
-	};
+        ImGui::End(); // end "Shape PCA" window
 
-	viewer.launch();
+        // PCA colour coefficients:
+        ImGui::SetNextWindowPos(ImVec2(380.f * menu.menu_scaling(), 0), ImGuiSetCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(200, 160), ImGuiSetCond_FirstUseEver);
+        ImGui::Begin("Colour PCA", nullptr, ImGuiWindowFlags_NoSavedSettings);
 
-	return EXIT_SUCCESS;
+        ImGui::Text("Coefficients");
+        if (morphable_model.get_color_model().get_num_principal_components() > 0) // a model was loaded
+        {
+            int num_color_coeffs_to_display =
+                std::min(morphable_model.get_color_model().get_num_principal_components(), 30);
+
+            if (color_coefficients.empty() || color_coefficients.size() != num_color_coeffs_to_display)
+            {
+                color_coefficients.resize(num_color_coeffs_to_display);
+            }
+            // color_coefficients are always initialised now.
+
+            ImGui::BeginGroup();
+            for (int i = 0; i < num_color_coeffs_to_display; ++i)
+            {
+                const string label = std::to_string(i);
+                ImGui::SliderFloat(label.c_str(), &color_coefficients[i], -3.0, 3.0);
+            }
+            ImGui::EndGroup();
+            string coeffs_displayed =
+                "Displaying " + std::to_string(num_color_coeffs_to_display) + "/" +
+                std::to_string(morphable_model.get_color_model().get_num_principal_components()) +
+                " coefficients.";
+            ImGui::Text(coeffs_displayed.c_str());
+
+            // We've got a colour model. So update the mesh that's been drawn with the value of the
+            // coefficients. Note that we are currently doing this every draw call, not only when the
+            // slider changes. See eos-model-viewer/issues/5.
+            VectorXf color_instance = morphable_model.get_color_model().draw_sample(color_coefficients);
+            const auto num_vertices = morphable_model.get_color_model().get_data_dimension() /
+                                      3; // will break for gray-level models!
+            Eigen::Map<Eigen::MatrixXf> color_instance_reshaped(
+                color_instance.data(), 3, num_vertices); // Take 3 at a piece, then transpose below
+            viewer.data().set_colors(color_instance_reshaped.transpose().cast<double>());
+        }
+
+        ImGui::End(); // end "Colour PCA" window
+
+        // PCA expression coefficients:
+        ImGui::SetNextWindowPos(ImVec2(580.f * menu.menu_scaling(), 0), ImGuiSetCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(200, 160), ImGuiSetCond_FirstUseEver);
+        ImGui::Begin("Expression PCA", nullptr, ImGuiWindowFlags_NoSavedSettings);
+
+        ImGui::Text("Coefficients");
+        if (morphable_model.has_separate_expression_model()) // a model was loaded
+        {
+            int expression_model_num_coeffs = 0;
+            float slider_min_range = -3.0f;
+            float slider_max_range = +3.0f;
+            if (eos::cpp17::holds_alternative<morphablemodel::Blendshapes>(
+                    morphable_model.get_expression_model().value()))
+            {
+                expression_model_num_coeffs = eos::cpp17::get<morphablemodel::Blendshapes>(
+                                                  morphable_model.get_expression_model().value())
+                                                  .size();
+                slider_min_range = -1.0f;
+            } else if (eos::cpp17::holds_alternative<morphablemodel::PcaModel>(
+                           morphable_model.get_expression_model().value()))
+            {
+                expression_model_num_coeffs =
+                    eos::cpp17::get<morphablemodel::PcaModel>(morphable_model.get_expression_model().value())
+                        .get_num_principal_components();
+            }
+
+            int num_expression_coeffs_to_display = std::min(expression_model_num_coeffs, 30);
+
+            if (expression_coefficients.empty() ||
+                expression_coefficients.size() != num_expression_coeffs_to_display)
+            {
+                expression_coefficients.resize(num_expression_coeffs_to_display);
+            }
+            // expression_coefficients are always initialised now.
+
+            ImGui::BeginGroup();
+            for (int i = 0; i < num_expression_coeffs_to_display; ++i)
+            {
+                const string label = std::to_string(i);
+                ImGui::SliderFloat(label.c_str(), &expression_coefficients[i], slider_min_range,
+                                   slider_max_range);
+            }
+            ImGui::EndGroup();
+            string coeffs_displayed = "Displaying " + std::to_string(num_expression_coeffs_to_display) + "/" +
+                                      std::to_string(expression_model_num_coeffs) + " coefficients.";
+            ImGui::Text(coeffs_displayed.c_str());
+
+            // We're not updating the mesh here. The identity-update above already updates it, since we update
+            // in each frame, and not just when a slider has moved. As long as we always have an identity
+            // model, this is fine.
+        }
+
+        ImGui::End(); // end "Expression PCA" window
+    };
+
+    viewer.launch();
+
+    return EXIT_SUCCESS;
 }
