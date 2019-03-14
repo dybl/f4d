@@ -146,7 +146,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" />
+    <string-array name="multi_select_list_preference_default_value"/>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -212,7 +212,8 @@
 
     <!-- settings for help and feedback-->
     <string name="pref_header_help_feedback">Help &amp; Feedback</string>
-    <string name="pref_header_help_feedback_summary">help us to find bug while using app and we accept your feedback</string>
+    <string name="pref_header_help_feedback_summary">help us to find bug while using app and we accept your feedback
+    </string>
 
     <string name="pref_title_all_problems">All Problems</string>
     <string name="pref_title_quick_help">Quick Help</string>
@@ -250,8 +251,17 @@
     <string name="photo_not_saved">The photo could not be saved</string>
     <string name="setting_resolution_failed">Setting proper resolution failed</string>
     <string name="video_recording_failed">Video recording failed, try using a different resolution</string>
+    <string name="title_activity_login">Sign in</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
 
-    <!-- Other aspect ratio -->
-    <string name="other">other</string>
 </resources>
 
